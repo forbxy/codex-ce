@@ -13,6 +13,10 @@ spec.loader.exec_module(build)
 
 
 class ReleaseTests(unittest.TestCase):
+    def test_upstream_pin_is_a_commit_not_an_annotated_tag(self):
+        kind = subprocess.check_output(['git', 'cat-file', '-t', build.CONFIG['upstream_commit']], cwd=ROOT, text=True).strip()
+        self.assertEqual(kind, 'commit')
+
     def test_external_dependencies_match_upstream(self):
         original = subprocess.check_output(['git', 'show', build.CONFIG['upstream_commit'] + ':codex-rs/Cargo.lock'], cwd=ROOT)
         packages = lambda value: [p for p in tomllib.loads(value)['package'] if 'source' in p]

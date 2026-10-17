@@ -1,6 +1,6 @@
 {
   "upstream_version": "0.163.0",
-  "upstream_commit": "129b8ec7ee6f4511557a4856279f529025c25af4",
+  "upstream_commit": "83086188ae0614bd882818ff1aa23f3194962012",
   "release_tag": "ce-v0.163.0-1",
   "component_version": "0.163.0-ce.1",
   "repository": "forbxy/codex-ce",

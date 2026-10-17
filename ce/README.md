@@ -43,6 +43,6 @@ The prior trial passed 13 offline boundary checks, automatic approval after sand
 
 Keep `main` aligned with upstream. Maintain compatibility on `ce/<upstream-version>` branches. GitHub Actions builds CE branch changes and publishes a prerelease when a matching `ce-v*` tag is pushed. The release tag must equal `ce/build-config.json`.
 
-For an upstream upgrade, start a new branch from its official tag and cherry-pick only the CE commits. Review every changed seccomp syscall and argument rule; update ARM EABI mappings rather than removing fail-closed checks. Update the pinned versions, input hashes and release tag, run host tests and real CoreELEC checks, and publish a new immutable tag. Do not overwrite an old tag or release asset. Pin the addon to that release's `component.json` only after verification.
+For an upstream upgrade, start a new branch from its official tag and cherry-pick only the CE commits. Pin the actual source commit (`git rev-parse 'rust-vVERSION^{commit}'`), not the annotated tag object's SHA. Review every changed seccomp syscall and argument rule; update ARM EABI mappings rather than removing fail-closed checks. Update the pinned versions, input hashes and release tag, run host tests and real CoreELEC checks, and publish a new immutable tag. Do not overwrite an old tag or release asset. Pin the addon to that release's `component.json` only after verification.
 
 This is an independent CoreELEC compatibility build, not an official OpenAI release.
