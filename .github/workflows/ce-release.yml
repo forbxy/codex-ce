@@ -1,0 +1,76 @@
+name: CoreELEC build and release
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['ce/**']
+    tags: ['ce-v*']
+    paths:
+      - 'ce/**'
+      - 'codex-rs/linux-sandbox/**'
+      - 'codex-rs/Cargo.lock'
+      - '.github/workflows/ce-release.yml'
+  pull_request:
+    branches: ['ce/**']
+    paths:
+      - 'ce/**'
+      - 'codex-rs/linux-sandbox/**'
+      - 'codex-rs/Cargo.lock'
+      - '.github/workflows/ce-release.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ce-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install build prerequisites
+        run: sudo apt-get update && sudo apt-get install -y build-essential pkg-config perl cmake ninja-build
+      - name: Build and test the checked-out source
+        run: python3 ce/build.py build --jobs 2
+      - uses: actions/upload-artifact@v4
+        with:
+          name: codex-ce-aarch64
+          path: |
+            dist/ce/*.tar.gz
+            dist/ce/*.json
+            dist/ce/*.patch
+            dist/ce/SHA256SUMS
+            dist/ce/MD5SUMS
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/ce-v')
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: codex-ce-aarch64
+          path: dist/ce
+      - name: Verify tag and release artifacts
+        run: |
+          python3 -c 'import json,os; assert json.load(open("ce/build-config.json"))["release_tag"] == os.environ["GITHUB_REF_NAME"]'
+          cd dist/ce
+          sha256sum -c SHA256SUMS
+          md5sum -c MD5SUMS
+      - name: Publish a CE compatibility prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/ce/*.tar.gz dist/ce/*.json dist/ce/*.patch dist/ce/SHA256SUMS dist/ce/MD5SUMS --verify-tag --prerelease --title "Codex $GITHUB_REF_NAME for CoreELEC" --notes-file ce/RELEASE-NOTES.md

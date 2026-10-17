@@ -1,0 +1,30 @@
+{
+  "upstream_version": "0.163.0",
+  "upstream_commit": "129b8ec7ee6f4511557a4856279f529025c25af4",
+  "release_tag": "ce-v0.163.0-1",
+  "component_version": "0.163.0-ce.1",
+  "repository": "forbxy/codex-ce",
+  "target": "aarch64-unknown-linux-musl",
+  "rust": "1.95.0",
+  "zig": {
+    "version": "0.15.2",
+    "url": "https://ziglang.org/download/0.15.2/zig-x86_64-linux-0.15.2.tar.xz",
+    "sha256": "02aa270f183da276e5b5920b1dac44a63f1a49e55050ebde3aecc9eb82f93239"
+  },
+  "rustup": {
+    "url": "https://static.rust-lang.org/rustup/archive/1.28.2/x86_64-unknown-linux-gnu/rustup-init",
+    "sha256": "20a06e644b0d9bd2fbdbfd52d42540bdde820ea7df86e92e533c073da0cdd43c"
+  },
+  "bwrap": {
+    "url": "https://github.com/openai/codex/releases/download/rust-v0.163.0/bwrap-aarch64-unknown-linux-musl.tar.gz",
+    "sha256": "953647c6f8c8adc1b8fc6534ff283bf95e6ba0230274a70a9eda33bb2c8e6a82",
+    "member": "bwrap-aarch64-unknown-linux-musl",
+    "binary_sha256": "c547cbdc762a70ed216789ffaa4c6c0e7d2beabe32245a498f8e365a9fc8dab4"
+  },
+  "code_mode_host": {
+    "url": "https://github.com/openai/codex/releases/download/rust-v0.163.0/codex-code-mode-host-aarch64-unknown-linux-musl.tar.gz",
+    "sha256": "284356aefb197f00b76b912efdfdbae8ccf3ea1f89b976dde064b7ccb43214ef",
+    "member": "codex-code-mode-host-aarch64-unknown-linux-musl",
+    "binary_sha256": "255eccc8a5c1d267dc0acbc815cc83aaa1f50955bd99943b29f00cafcdcab771"
+  }
+}
