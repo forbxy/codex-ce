@@ -3,20 +3,7 @@ name: CoreELEC build and release
 on:
   workflow_dispatch:
   push:
-    branches: ['ce/**']
     tags: ['ce-v*']
-    paths:
-      - 'ce/**'
-      - 'codex-rs/linux-sandbox/**'
-      - 'codex-rs/Cargo.lock'
-      - '.github/workflows/ce-release.yml'
-  pull_request:
-    branches: ['ce/**']
-    paths:
-      - 'ce/**'
-      - 'codex-rs/linux-sandbox/**'
-      - 'codex-rs/Cargo.lock'
-      - '.github/workflows/ce-release.yml'
 
 permissions:
   contents: read
