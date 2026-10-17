@@ -37,7 +37,20 @@ jobs:
       - name: Install build prerequisites
         run: sudo apt-get update && sudo apt-get install -y build-essential pkg-config perl cmake ninja-build
       - name: Build and test the checked-out source
-        run: python3 ce/build.py build --jobs 2
+        run: |
+          set +e
+          python3 ce/build.py build --jobs 2 > ce-build.log 2>&1
+          result=$?
+          tail -80 ce-build.log
+          if [ "$result" -ne 0 ]; then
+            python3 - <<'PY'
+          from pathlib import Path
+          text = Path('ce-build.log').read_text(errors='replace')[-10000:]
+          text = text.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+          print('::error title=CE build diagnostics::' + text)
+          PY
+          fi
+          exit "$result"
       - uses: actions/upload-artifact@v4
         with:
           name: codex-ce-aarch64
