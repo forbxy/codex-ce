@@ -33,6 +33,10 @@ use seccompiler::SeccompRule;
 use seccompiler::TargetArch;
 use seccompiler::apply_filter;
 
+#[cfg(target_arch = "aarch64")]
+#[path = "seccomp_arm_compat.rs"]
+mod arm_compat;
+
 /// Apply sandbox policies inside this thread so only the child inherits
 /// them, not the entire CLI process.
 ///
@@ -281,6 +285,8 @@ fn install_network_seccomp_filter_on_current_thread(
         }
     }
 
+    #[cfg(target_arch = "aarch64")]
+    let arm_rules = rules.clone();
     let filter = SeccompFilter::new(
         rules,
         SeccompAction::Allow,                     // default – allow
@@ -295,6 +301,8 @@ fn install_network_seccomp_filter_on_current_thread(
     )?;
 
     let prog: BpfProgram = filter.try_into()?;
+    #[cfg(target_arch = "aarch64")]
+    let prog = arm_compat::with_arm_compat(prog, arm_rules)?;
 
     apply_filter(&prog)?;
 

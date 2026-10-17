@@ -1516,7 +1516,8 @@ fn is_proc_mount_failure(stderr: &str) -> bool {
         && stderr.contains("/newroot/proc")
         && (stderr.contains("Invalid argument")
             || stderr.contains("Operation not permitted")
-            || stderr.contains("Permission denied"))
+            || stderr.contains("Permission denied")
+            || stderr.contains("Resource busy"))
 }
 
 struct InnerSeccompCommandArgs<'a> {
